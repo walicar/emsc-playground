@@ -1,0 +1,3 @@
+include: ["static/"]
+exclude: ["/static/.gitkeep"]
+baseurl: "/wasm_cxx_playground"
