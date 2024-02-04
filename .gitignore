@@ -2,3 +2,4 @@ node_modules/
 build/
 test/index*
 web/assets/out*
+.vscode
