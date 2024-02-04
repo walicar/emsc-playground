@@ -4,7 +4,7 @@ const app = express();
 
 var dir = path.join(__dirname, '..')
 
-app.use(express.static(path.join(dir, 'web/static')));
+app.use('/assets', express.static(path.join(dir, 'web/assets')));
 
 app.get('/', (req, res) => {
    res.sendFile(path.join(dir, 'web/index.html'));
