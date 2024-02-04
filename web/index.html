@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Playground</title>
+    <script src="project.js"></script>
+</head>
+<body style="font-family:helvetica,sans;">
+    <h1>WASM CXX Playground</h1>
+    <p>Square Root of 16 is: <span id="result"></span></p>
+    <script>
+        Module.onRuntimeInitialized = () => {
+            try {
+                let result = Module.ccall('int_sqrt', 'number', ['number'], [28]);
+                document.getElementById('result').textContent = result;
+            } catch (e) {
+                console.error('Error calling int_sqrt:', e);
+            }
+        };
+    </script>
+</body>
+</html>
