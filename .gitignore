@@ -1,4 +1,4 @@
 node_modules/
 build/
 test/index*
-web/static/*
+web/static/out*

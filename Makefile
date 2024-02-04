@@ -1,5 +1,5 @@
 main: src/hello.cxx
-	em++ src/hello.cxx -o web/static/project.js
+	em++ src/hello.cxx -o web/static/out.js
 
 emhtml: src/hello.cxx
 	em++ src/hello.cxx -o test/index.html
