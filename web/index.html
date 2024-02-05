@@ -5,20 +5,6 @@
   </head>
   <body style="font-family: helvetica, sans">
     <h1>WASM CXX Playground</h1>
-    <p>Square Root of 28 is: <span id="result"></span></p>
-    <script>
-      var Module = {
-        onRuntimeInitialized: function () {
-          let instance = new Module.MyClass(10, "hello");
-          instance.incrementX();
-          instance.x; // 11
-          instance.x = 20; // 20
-          var check = Module.MyClass.getStringFromInstance(instance); // "hello"
-          console.log(check);
-          instance.delete();
-        },
-      };
-    </script>
-    <script src="assets/out.js"></script>
+    <script async src="assets/out.js"></script>
   </body>
 </html>

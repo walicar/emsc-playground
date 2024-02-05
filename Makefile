@@ -1,8 +1,8 @@
-main: src/main.cxx
-	em++ src/main.cxx -o web/assets/out.js -L/opt/homebrew/Cellar/emscripten/3.1.51/libexec/system/lib -lembind
+main: src/main.c
+	emcc src/main.c -o web/assets/out.js -pthread -sPROXY_TO_PTHREAD -sPTHREAD_POOL_SIZE=1
 
-emhtml: src/main.cxx
-	em++ src/main.cxx -o test/index.html
+emhtml: src/main.c
+	emcc src/main.c -o test/index.html -pthread -sPROXY_TO_PTHREAD -sPTHREAD_POOL_SIZE=1
 
 clean:
-	rm -f web/static/* test/index*
+	rm -f web/assets/* test/index*
