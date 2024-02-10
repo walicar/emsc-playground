@@ -1,4 +1,6 @@
 #include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
+#include <stdbool.h>
 #include <emscripten.h>
 #include <pthread.h>
 #include <stdio.h>
@@ -6,6 +8,9 @@
 
 #define NUMTHRDS 4
 #define MAGNIFICATION 1e9
+
+SDL_Surface *screen = NULL;
+SDL_Surface *image = NULL;
 
 typedef struct
 {
@@ -15,6 +20,60 @@ typedef struct
 
 pthread_t callThd[NUMTHRDS];
 pthread_mutex_t mutexsum;
+
+static bool is_running = false;
+
+bool init_sdl()
+{
+    bool success = true;
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("SDL init ERR: %s\n", SDL_GetError());
+        success = false;
+    }
+    else
+    {
+        screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+        if (SDL_MUSTLOCK(screen))
+            SDL_LockSurface(screen);
+        if (screen == NULL)
+        {
+            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+            success = false;
+        }
+        if (SDL_MUSTLOCK(screen))
+            SDL_UnlockSurface(screen);
+
+        SDL_Flip(screen); // swap screen buffer
+    }
+    return success;
+}
+
+bool load_media()
+{
+    bool success = true;
+    int flags = IMG_INIT_PNG;
+    if (!(IMG_Init(flags) & flags))
+    {
+        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+        success = false;
+    }
+
+    image = IMG_Load("src/smile.png");
+    if (image == NULL)
+    {
+        printf("Unable to load image %s! SDL Error: %s\n", "smile.png", IMG_GetError());
+        success = false;
+    }
+    return success;
+}
+
+void close_sdl()
+{
+    SDL_FreeSurface(image);
+    SDL_FreeSurface(screen);
+    SDL_Quit();
+}
 
 void *count_pi(void *arg)
 {
@@ -32,8 +91,29 @@ void *count_pi(void *arg)
     pthread_exit((void *)0);
 }
 
+static void mainloop(void)
+{
+    SDL_Event e;
+    if (!is_running)
+    {
+        // clean up
+        emscripten_cancel_main_loop();
+        close_sdl();
+    }
+
+    while (SDL_PollEvent(&e) != 0)
+    {
+        if (e.type == SDL_QUIT)
+        {
+            is_running = false;
+        }
+    }
+    // run it
+}
+
 int main(int argc, char *argv[])
 {
+    // pthread stuff
     printf("program started!\n");
     pthread_mutex_init(&mutexsum, NULL);
 
@@ -67,32 +147,27 @@ int main(int argc, char *argv[])
 
     pthread_mutex_destroy(&mutexsum);
 
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Surface *screen = SDL_SetVideoMode(256, 256, 32, SDL_SWSURFACE);
+    // SDL stuff
 
-    if (SDL_MUSTLOCK(screen))
-        SDL_LockSurface(screen);
-    for (int i = 0; i < 256; i++)
+    if (!init_sdl())
     {
-        for (int j = 0; j < 256; j++)
+        printf("Failed to initialize!\n");
+    }
+    else
+    {
+        // Load media
+        if (!load_media())
         {
-            // To emulate native behavior with blitting to screen, alpha component is
-            // ignored. Test that it is so by outputting data (and testing that it
-            // does get discarded)
-            int alpha = (i + j) % 255;
-            *((Uint32 *)screen->pixels + i * 256 + j) =
-                SDL_MapRGBA(screen->format, i, j, 255 - i, alpha);
+            printf("Failed to load media!\n");
+        }
+        else
+        {
+            // Apply the image
+            SDL_BlitSurface(image, NULL, screen, NULL);
         }
     }
-
-    if (SDL_MUSTLOCK(screen))
-        SDL_UnlockSurface(screen);
-    SDL_Flip(screen);
-
-    printf("you should see a smoothly-colored square - no sharp lines but the "
-           "square borders!\n");
-
-    SDL_Quit();
+    close_sdl();
+    // cleanup
     pthread_exit(NULL);
 
     return 0;

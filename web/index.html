@@ -17,7 +17,11 @@
           canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
 
           return canvas;
-        })() // ?
+        })(), // ?
+        locateFile: (path, prefix) => {
+          if (path.endsWith(".data")) return prefix + "/assets/" + path
+          return prefix + path
+        }
       };
     </script>
     <script async src="assets/out.js"></script>
