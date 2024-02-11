@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Playground</title>
-    <script src="assets/out.js"></script>
-</head>
-<body style="font-family:helvetica,sans;">
-    <h1>WASM CXX Playground</h1>
-    <p>Square Root of 28 is: <span id="result"></span></p>
-    <script>
-        Module.onRuntimeInitialized = () => {
-            try {
-                let result = Module.ccall('int_sqrt', 'number', ['number'], [28]);
-                document.getElementById('result').textContent = result;
-            } catch (e) {
-                console.error('Error calling int_sqrt:', e);
-            }
-        };
+    <link rel="shortcut icon" type="image/svg+xml" href="/icon.svg?"/>
+  </head>
+  <body>
+    <h1>Playground</h1>
+    <p>Running a multithreaded C program, then rendering a smiley face using SDL.</p>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    <script type='text/javascript'>
+      var Module = {
+        canvas: (() => {
+          var canvas = document.getElementById('canvas');
+
+          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+          // application robust, you may want to override this behavior before shipping!
+          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+          canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+
+          return canvas;
+        })(), // ?
+        locateFile: (path, prefix) => {
+          if (path.endsWith(".data")) return prefix + "/assets/" + path
+          return prefix + path
+        }
+      };
     </script>
-</body>
+    <script async src="assets/out.js"></script>
+  </body>
 </html>

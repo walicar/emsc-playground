@@ -1,8 +1,8 @@
-main: src/main.cxx
-	em++ src/main.cxx -o web/assets/out.js -s EXPORTED_FUNCTIONS='["_int_sqrt"]' -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'
+main: src/main.c
+	emcc src/main.c -o web/assets/out.js -pthread -sPROXY_TO_PTHREAD -sPTHREAD_POOL_SIZE=1 --preload-file src/smile.png --use-preload-plugins
 
-emhtml: src/main.cxx
-	em++ src/main.cxx -o test/index.html
+emhtml: src/main.c
+	emcc src/main.c -o test/index.html -pthread -sPROXY_TO_PTHREAD -sPTHREAD_POOL_SIZE=1 --preload-file src/smile.png --use-preload-plugins
 
 clean:
-	rm -f web/static/* test/index*
+	rm -f web/assets/* test/index*
