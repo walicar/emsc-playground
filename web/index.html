@@ -21,10 +21,12 @@
           return canvas;
         })(), // ?
         locateFile: (path, prefix) => {
+          console.log("current prefix", prefix, path)
           if (path.endsWith(".data")) {
-            return prefix + projectName + "/assets/" + path
+            print("the right prefix for getting data", getPrefix(), path);
+            return getPrefix() + path;
           }
-          return prefix + path
+          return prefix + path;
         }
       };
     </script>

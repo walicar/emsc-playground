@@ -1,4 +1,4 @@
-function getProjectName() {
+function getPrefix() {
     const url = new URL(window.location.href);
-    return url.pathname.split("/").slice(1)[0];
+    return url.href + "assets/"
 }
