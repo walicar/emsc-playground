@@ -10,7 +10,6 @@
     <p>Running a multithreaded C program, then rendering a smiley face using SDL.</p>
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
     <script type='text/javascript'>
-      var projectName = getProjectName();
       var Module = {
         canvas: (() => {
           var canvas = document.getElementById('canvas');
