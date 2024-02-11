@@ -2,9 +2,12 @@
 <html>
   <head>
     <title>Playground</title>
+    <script src="assets/coi-serviceworker.js"></script>
+    <link rel="shortcut icon" type="image/svg+xml" href="/icon.svg?"/>
   </head>
-  <body style="font-family: helvetica, sans">
-    <h1>WASM CXX Playground</h1>
+  <body>
+    <h1>Playground</h1>
+    <p>Running a multithreaded C program, then rendering a smiley face using SDL.</p>
     <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
     <script type='text/javascript'>
       var Module = {
