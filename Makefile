@@ -5,4 +5,4 @@ emhtml: src/main.c
 	emcc src/main.c -o test/index.html -pthread -sPROXY_TO_PTHREAD -sPTHREAD_POOL_SIZE=1 --preload-file src/smile.png --use-preload-plugins
 
 clean:
-	rm -f web/assets/* test/index*
+	rm -f web/assets/out* test/index*
