@@ -1,5 +1,6 @@
-# WASM Playground
-Boilerplate code to play with C compiled WASM modules
+# emsc-playground
+- multithreading
+- render image with SDL
 
 ## Overview
 - `web/` contains all of the files that will be used to render website
